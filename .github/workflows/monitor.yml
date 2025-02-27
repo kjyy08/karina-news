@@ -29,6 +29,10 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
+      - name: 이전 기사 및 사진 삭제
+        run: |
+          find ./news-data/ -type f -exec rm -f {} +
+
       - name: 실행 결과로 나온 파일을 커밋
         uses: EndBug/add-and-commit@v9
         with:
@@ -36,7 +40,3 @@ jobs:
           author_email: ${{ github.actor }}@users.noreply.github.com
           message: "모니터링 파일 저장"
           add: "."
-
-      - name: 이전 기사 및 사진 삭제
-        run: |
-          find ./news-data/ -type f -exec rm -f {} +
