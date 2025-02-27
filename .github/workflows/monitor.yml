@@ -12,10 +12,6 @@ jobs:
       - name: 저장소에 있는 파일 불러오기
         uses: actions/checkout@v4
 
-      - name: 이전 기사 및 사진 삭제
-        run: |
-          find ./news-data/ -type f -exec rm -f {} +
-
       - name: Java 17 세팅
         uses: actions/setup-java@v4
         with:
@@ -40,3 +36,7 @@ jobs:
           author_email: ${{ github.actor }}@users.noreply.github.com
           message: "모니터링 파일 저장"
           add: "."
+
+      - name: 이전 기사 및 사진 삭제
+        run: |
+          find ./news-data/ -type f -exec rm -f {} +
