@@ -26,24 +26,24 @@ public class App {
                 .formatted(content, keyword, keyword);
         String response = gemini.requestText(prompt);
 
-        String imageUrl = findImageUrl("./news-data/", keyword);
+        String imageUrl = findImageUrl("./news-data/");
         System.out.println("imageUrl = " + imageUrl);
         slackBot.sendSlackMsg(keyword, response, imageUrl);
     }
 
-    public static String findImageUrl(String directoryPath, String keyword) {
+    public static String findImageUrl(String directoryPath) {
         try (Stream<Path> paths = Files.list(Paths.get(directoryPath))) {
-            return paths.filter(Files::isRegularFile) // 1. 파일만 필터링
-                    .map(Path::getFileName) // 2. 파일명만 가져오기
-                    .map(Path::toString) // 3. 문자열 변환
-                    .filter(fileName -> fileName.matches(keyword + "\\.(png|jpg|jpeg)")) // 4. 정규식 검사
-                    .findFirst() // 5. 첫 번째 매칭된 파일 찾기
-                    .map(fileName -> "https://github.com/kjyy08/karina-monitoring/news-data/" + fileName) // 6. URL 변환
-                    .orElse("");
+            return paths
+                    .filter(Files::isRegularFile) // 파일만 필터링
+                    .map(path -> path.toString().replace("\\", "/")) // 경로를 슬래시(`/`)로 변환
+                    .filter(path -> path.matches(".*/.*\\.(jpg|png|jpeg)$")) // jpg, png, jpeg 확장자 체크
+                    .findFirst() // 첫 번째 일치 파일 찾기
+                    .map(path -> "https://github.com/kjyy08/karina-news/blob/main/news-data/" + Paths.get(path).getFileName() + "?raw=true") // URL로 변환
+                    .orElse(""); // 일치하는 파일 없으면 빈 문자열 반환
         } catch (IOException e) {
             e.printStackTrace();
-            return "";
         }
+        return "";
     }
 }
 
