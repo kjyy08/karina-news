@@ -1,1 +1,1 @@
-# auto-naverMonitoring
+# 카리나 뉴스
