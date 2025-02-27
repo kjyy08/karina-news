@@ -47,7 +47,7 @@ public class App {
                     .filter(Files::isRegularFile) // 파일만 필터링
                     .map(path -> path.toString().replace("\\", "/")) // 경로를 슬래시(`/`)로 변환
                     .filter(path -> path.matches(".*/.*\\.(jpg|png|jpeg)$")) // jpg, png, jpeg 확장자 체크
-                    .findFirst() // 첫 번째 일치 파일 찾기
+                    .findAny()
                     .map(path -> {
                         String fileName = Paths.get(path).getFileName().toString();
                         try {
