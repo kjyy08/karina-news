@@ -9,6 +9,10 @@ jobs:
   make-file:
     runs-on: ubuntu-latest
     steps:
+      - name: 타임존을 한국 시간대로 설정
+        run: |
+          sudo timedatectl set-timezone Asia/Seoul
+
       - name: 저장소에 있는 파일 불러오기
         uses: actions/checkout@v4
 
@@ -28,10 +32,6 @@ jobs:
           NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-
-      - name: 이전 기사 및 사진 삭제
-        run: |
-          find ./news-data/ -type f -exec rm -f {} +
 
       - name: 실행 결과로 나온 파일을 커밋
         uses: EndBug/add-and-commit@v9

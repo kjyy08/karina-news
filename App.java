@@ -1,7 +1,10 @@
+import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 
 public class App {
@@ -13,7 +16,8 @@ public class App {
         String keyword = System.getenv("NAVER_KEYWORD");
         naverMonitoring.getNews(keyword, 10, 1, SortType.DATE);
 
-        String txtFilePath = "./news-data/%s.txt".formatted(keyword);
+        String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String txtFilePath = "./news-data/%s/%s.txt".formatted(currentDate, keyword);
         String content = "";
 
         try {
@@ -33,7 +37,7 @@ public class App {
 
         System.out.println("response = " + response);
 
-        String imageUrl = findImageUrl("./news-data/");
+        String imageUrl = findImageUrl("./news-data/%s/".formatted(currentDate));
         System.out.println("imageUrl = " + imageUrl);
         slackBot.sendSlackMsg(keyword, response, imageUrl);
     }

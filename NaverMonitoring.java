@@ -5,8 +5,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,10 +39,24 @@ class NaverMonitoring {
             }
 
             logger.info(Arrays.toString(result));
-            File file = new File("./news-data/%s.txt".formatted(keyword));
 
+            // 폴더 경로와 파일 이름 생성
+            String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            File directory = new File("./news-data/%s".formatted(currentDate));
+
+            // 디렉토리가 없으면 생성
+            if (!directory.exists()) {
+                boolean dirCreated = directory.mkdirs();
+                logger.info(dirCreated ? "디렉토리 생성됨" : "디렉토리 이미 존재");
+            }
+
+            // 파일 생성
+            File file = new File(directory, "%s.txt".formatted(keyword));
+
+            // 파일이 없으면 생성
             if (!file.exists()) {
-                logger.info(file.createNewFile() ? "신규 생성" : "이미 있음");
+                boolean fileCreated = file.createNewFile();
+                logger.info(fileCreated ? "파일 생성됨" : "파일 이미 존재");
             }
 
             try (FileWriter fileWriter = new FileWriter(file)) {
@@ -52,19 +67,28 @@ class NaverMonitoring {
             }
 
             logger.info("제목 목록 생성 완료");
+
+            // 이미지 다운로드
             String imageResponse = requestAPI("image", keyword, display, start, SortType.SIM);
 
-            imageLink = imageResponse
-                    .split("link\":\"")[new Random().nextInt(10)].split("\",")[0]
-                    .split("\\?")[0]
-                    .replace("\\", "");
-            logger.info(imageLink);
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(imageLink))
-                    .build();
-            String[] tmp2 = imageLink.split("\\.");
-            Path path = Path.of("./news-data/%s.%s".formatted(keyword, tmp2[tmp2.length - 1]));
-            HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofFile(path));
+            // 이미지 URL 추출
+            try {
+                imageLink = imageResponse
+                        .split("link\":\"")[new Random().nextInt(10)].split("\",")[0]
+                        .split("\\?")[0]
+                        .replace("\\", "");
+                logger.info("이미지 URL: " + imageLink);
+
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(imageLink))
+                        .build();
+                String[] tmp2 = imageLink.split("\\.");
+                Path path = Path.of(directory.getAbsolutePath(), "%s.%s".formatted(keyword, tmp2[tmp2.length - 1]));
+                HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofFile(path));
+            } catch (Exception e) {
+                logger.severe("이미지 다운로드 오류: " + e.getMessage());
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
