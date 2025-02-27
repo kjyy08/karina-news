@@ -8,15 +8,22 @@ public class SlackBot {
 
     public void sendSlackMsg(String keyword, String text, String imageUrl) {
         String slackUrl = SLACK_BASE_URL + System.getenv("SLACK_WEBHOOK_URL");
+
+        // JSON 형식에 안전하도록 문자열 이스케이프 처리
+        String safeKeyword = escapeJson(keyword);
+        String safeText = escapeJson(text);
+        String safeImageUrl = escapeJson(imageUrl);
+
         String payload = """
                  {
                    "attachments": [
                      {
                        "color": "#2eb886",
                        "author_name": "%s",
+                       "author_icon": "https://i.pinimg.com/736x/bb/95/43/bb95439dbbab4fd1f870f717c5f66019.jpg",
                        "fields": [
                          {
-                           "title": "📝 오늘의 뉴스",
+                           "title": "📢 오늘의 뉴스 📢",
                            "value": "%s",
                            "short": true
                          }
@@ -25,7 +32,7 @@ public class SlackBot {
                      }
                    ]
                  }
-                """.formatted(keyword, text, imageUrl);
+                """.formatted(safeKeyword, safeText, safeImageUrl);
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -41,5 +48,14 @@ public class SlackBot {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // 간단한 JSON 이스케이프 유틸리티 함수
+    private String escapeJson(String str) {
+        if (str == null) return "";
+        return str.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r");
     }
 }

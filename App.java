@@ -11,7 +11,7 @@ public class App {
         Gemini gemini = new Gemini();
 
         String keyword = System.getenv("NAVER_KEYWORD");
-        naverMonitoring.getNews(keyword, 10, 1, SortType.SIM);
+        naverMonitoring.getNews(keyword, 10, 1, SortType.DATE);
 
         String txtFilePath = "./news-data/%s.txt".formatted(keyword);
         String content = "";
@@ -22,9 +22,16 @@ public class App {
             e.printStackTrace();
         }
 
-        String prompt = "%s 의 내용은 %s를 키워드로 네이버에서 오늘의 뉴스 기사를 검색한거야. %s의 뉴스 기사를 요약해서 평문으로 출력해줘."
+        String prompt = "%s 의 내용은 %s를 키워드로 네이버에서 오늘의 뉴스 기사를 검색한거야. %s의 뉴스 기사를 핵심 기사 위주 3줄로 요약해서 평문으로 출력해줘."
                 .formatted(content, keyword, keyword);
         String response = gemini.requestText(prompt);
+
+        // 개행 문자와 * 제거
+        response = response.replaceAll("\\\\n", " ");
+        response = response.replaceAll("\t", "");
+        response = response.replace("*", "");
+
+        System.out.println("response = " + response);
 
         String imageUrl = findImageUrl("./news-data/");
         System.out.println("imageUrl = " + imageUrl);
