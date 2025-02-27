@@ -40,3 +40,7 @@ jobs:
           author_email: ${{ github.actor }}@users.noreply.github.com
           message: "모니터링 파일 저장"
           add: "."
+
+      - name: Push changes to repository
+        run: |
+          git push origin main
