@@ -6,6 +6,10 @@ import java.net.http.HttpResponse;
 public class SlackBot {
     private static final String SLACK_BASE_URL = "https://hooks.slack.com/services/";
 
+    public static void main(String[] args) {
+
+    }
+
     public void sendSlackMsg(String keyword, String text, String imageUrl) {
         String slackUrl = SLACK_BASE_URL + System.getenv("SLACK_WEBHOOK_URL");
 

@@ -26,7 +26,7 @@ class NaverMonitoring {
         naverMonitoring.getNews("카리나", 10, 1, SortType.DATE);
     }
 
-    public void getNews(String keyword, int display, int start, SortType sort) {
+    public String getNews(String keyword, int display, int start, SortType sort) {
         String imageLink = "";
 
         try {
@@ -85,6 +85,7 @@ class NaverMonitoring {
                 String[] tmp2 = imageLink.split("\\.");
                 Path path = Path.of(directory.getAbsolutePath(), "%s.%s".formatted(keyword, tmp2[tmp2.length - 1]));
                 HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofFile(path));
+
             } catch (Exception e) {
                 logger.severe("이미지 다운로드 오류: " + e.getMessage());
             }
@@ -92,6 +93,8 @@ class NaverMonitoring {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return imageLink;
     }
 
     private String requestAPI(String path, String keyword, int display, int start, SortType sort) throws Exception {
