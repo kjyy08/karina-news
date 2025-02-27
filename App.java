@@ -37,12 +37,12 @@ public class App {
 
         System.out.println("response = " + response);
 
-        String imageUrl = findImageUrl("./news-data/%s/".formatted(currentDate));
+        String imageUrl = findImageUrl(currentDate, "./news-data/%s/".formatted(currentDate));
         System.out.println("imageUrl = " + imageUrl);
         slackBot.sendSlackMsg(keyword, response, imageUrl);
     }
 
-    public static String findImageUrl(String directoryPath) {
+    public static String findImageUrl(String currentDate, String directoryPath) {
         try (Stream<Path> paths = Files.list(Paths.get(directoryPath))) {
             return paths
                     .filter(Files::isRegularFile) // 파일만 필터링
@@ -53,8 +53,8 @@ public class App {
                         String fileName = Paths.get(path).getFileName().toString();
                         try {
                             // 파일명을 URL 인코딩 처리
-                            String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
-                            return "https://github.com/kjyy08/karina-news/blob/main/news-data/" + encodedFileName + "?raw=true";
+                            String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
+                            return "https://github.com/kjyy08/karina-news/blob/main/news-data/%s/".formatted(currentDate) + encodedFileName + "?raw=true";
                         } catch (Exception e) {
                             e.printStackTrace();
                             return "";
