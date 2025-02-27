@@ -14,7 +14,6 @@ public class SlackBot {
                      {
                        "color": "#2eb886",
                        "author_name": "%s",
-                       "title": "%s",
                        "fields": [
                          {
                            "title": "📝 오늘의 뉴스",
@@ -26,7 +25,7 @@ public class SlackBot {
                      }
                    ]
                  }
-                """.formatted(keyword, text, text, imageUrl);
+                """.formatted(keyword, text, imageUrl);
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
