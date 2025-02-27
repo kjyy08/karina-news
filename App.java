@@ -28,7 +28,7 @@ public class App {
 
         // 개행 문자와 * 제거
         response = response.replaceAll("\\\\n", " ");
-        response = response.replaceAll("\t", "");
+        response = response.replaceAll("    ", "");
         response = response.replace("*", "");
 
         System.out.println("response = " + response);

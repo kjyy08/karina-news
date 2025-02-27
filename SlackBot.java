@@ -16,6 +16,7 @@ public class SlackBot {
 
         String payload = """
                  {
+                   "text": "오늘의 카리나 뉴스",
                    "attachments": [
                      {
                        "color": "#2eb886",
