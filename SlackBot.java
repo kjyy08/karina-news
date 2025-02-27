@@ -16,19 +16,11 @@ public class SlackBot {
 
         String payload = """
                  {
-                   "text": "오늘의 카리나 뉴스",
+                   "text": "📢 오늘의 %s 뉴스 📢",
                    "attachments": [
                      {
                        "color": "#2eb886",
-                       "author_name": "%s",
-                       "author_icon": "https://i.pinimg.com/736x/bb/95/43/bb95439dbbab4fd1f870f717c5f66019.jpg",
-                       "fields": [
-                         {
-                           "title": "📢 오늘의 뉴스 📢",
-                           "value": "%s",
-                           "short": true
-                         }
-                       ],
+                       "text": "%s",
                        "image_url": "%s"
                      }
                    ]

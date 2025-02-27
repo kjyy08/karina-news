@@ -26,13 +26,12 @@ public class App {
             e.printStackTrace();
         }
 
-        String prompt = "%s 의 내용은 %s를 키워드로 네이버에서 오늘의 뉴스 기사를 검색한거야. %s의 뉴스 기사를 핵심 기사 위주 3줄로 요약해서 평문으로 출력해줘."
+        String prompt = "%s 의 내용은 %s를 키워드로 네이버에서 오늘의 뉴스 기사를 검색한거야. %s의 뉴스 기사를 요약해서 1. 2. 3. ~ 이런식으로 순서를 작성해서 평문으로 출력해줘."
                 .formatted(content, keyword, keyword);
         String response = gemini.requestText(prompt);
 
         // 개행 문자와 * 제거
-        response = response.replaceAll("\\\\n", " ");
-        response = response.replaceAll("    ", "");
+        response = response.replaceAll("\\\\n", "\n");
         response = response.replace("*", "");
 
         System.out.println("response = " + response);
