@@ -1,7 +1,7 @@
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
 import java.util.stream.Stream;
 
 public class App {
@@ -38,7 +38,17 @@ public class App {
                     .map(path -> path.toString().replace("\\", "/")) // 경로를 슬래시(`/`)로 변환
                     .filter(path -> path.matches(".*/.*\\.(jpg|png|jpeg)$")) // jpg, png, jpeg 확장자 체크
                     .findFirst() // 첫 번째 일치 파일 찾기
-                    .map(path -> "https://github.com/kjyy08/karina-news/blob/main/news-data/" + Paths.get(path).getFileName() + "?raw=true") // URL로 변환
+                    .map(path -> {
+                        String fileName = Paths.get(path).getFileName().toString();
+                        try {
+                            // 파일명을 URL 인코딩 처리
+                            String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
+                            return "https://github.com/kjyy08/karina-news/blob/main/news-data/" + encodedFileName + "?raw=true";
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return "";
+                        }
+                    })
                     .orElse(""); // 일치하는 파일 없으면 빈 문자열 반환
         } catch (IOException e) {
             e.printStackTrace();
@@ -46,5 +56,3 @@ public class App {
         return "";
     }
 }
-
-
