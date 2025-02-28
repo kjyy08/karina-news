@@ -1,4 +1,4 @@
-name: karina
+name: 자동 모니터링
 
 on:
   schedule:
