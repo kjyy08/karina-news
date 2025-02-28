@@ -1,6 +1,7 @@
-name: 자동 모니터링
+name: 카리나 패치
 
 on:
+  workflow_dispatch:  # 수동 실행 가능
   schedule:
     - cron: '0 0 * * *'  # 매일 한국 시간 오전 9시
 
