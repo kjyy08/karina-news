@@ -1,4 +1,4 @@
-name: 카리나 패치
+name: 카리나 모니터링
 
 on:
   schedule:
